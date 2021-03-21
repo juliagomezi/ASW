@@ -7,5 +7,8 @@ from django.shortcuts import render
 def index(request):
     return render(request, "news.html")
 
+def newest(request):
+    return render(request, "newest.html")
+
 def submit(request):
     return render(request, "submit.html")
