@@ -1,10 +1,12 @@
+from datetime import timezone, datetime
+
 from django.db import models
 
 
 # Create your models here.
 
 class User(models.Model):
-    id = models.IntegerField
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     mail = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
@@ -24,8 +26,10 @@ class Contribution(models.Model):
         max_length=3,
         choices=CHOICES,
         default='url')
-    id = models.IntegerField
-    content = models.CharField(max_length=200)
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200, default="Oriol")
+    url = models.CharField(max_length=200, default="Oriol")
+    text = models.CharField(max_length=200, default="Carles")
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

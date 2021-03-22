@@ -1,6 +1,7 @@
 <html lang="en" op="submit">
     <head>
         <link rel="shortcut icon" href="/static/y18.gif">
+        <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
         <title>Submit | Hacker News</title>
     </head>
     <body>
@@ -25,9 +26,9 @@
                 <tr id="pagespace" Submit style="height:10px"></tr>
                 <tr>
                     <td>
-                        <form method="post" action="/r">
-                            <input type="hidden" name="fnid" value="xt5RalPvCh5O1zRdQCHBGd">
-                            <input type="hidden" name="fnop" value="submit-page">
+                        <form action="{% url 'hackernews:add' %}" method="post">
+                        {% csrf_token %}
+
                             <table border="0">
                                 <tr>
                                     <td>title</td>
