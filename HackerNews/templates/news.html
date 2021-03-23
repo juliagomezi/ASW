@@ -7,18 +7,28 @@
         <td align="right" valign="top" class="title">
             <span class="rank">{{ forloop.counter }}.</span>
         </td>      
-        <td valign="top" class="votelinks" style="text-align: center;">
+        <td valign="top" class="votelinks"><center>
             <a id='up_26521582' href='vote?id=26521582&amp;how=up&amp;goto=news'>
                 <div class='votearrow' title='upvote'></div>
             </a>
+        </center>
         </td>
         <td class="title">
-            <a href={{ contribution.url }} class="storylink">{{ contribution.title}}</a>
+            <a href={{ contribution.url }} class="storylink">{{ contribution.title }}</a>
             <span class="sitebit comhead"> 
-                (<a href={{ contribution.url }}><span class="sitestr"> {{  contribution.url }}</span></a>)
+                (<a href={{ contribution.url }}><span class="sitestr"> {{ contribution.url }}</span></a>)
             </span>
         </td>
     </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td class="subtext">
+            <span class="score" id="score_26521582">40 points</span> by <a href="user?id=mg" class="hnuser">mg</a> 
+            <span class="age"><a href="item?id=26521582">3 hours ago</a></span> 
+            <span id="unv_26521582"></span> | <a href="hide?id=26521582&amp;goto=news">hide</a> | <a href="item?id=26521582">34&nbsp;comments</a>              
+        </td>
+    </tr>
+    <tr class="spacer" style="height:5px"></tr>
     {% endfor %}
-
+    
 {% endblock %}
