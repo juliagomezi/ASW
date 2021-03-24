@@ -3,9 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-from django.views.generic import CreateView
+from django.views.generic import  TemplateView
 
-from HackerNews.models import Contribution, User
+from HackerNews.models import Contribution, User, SubmitForm
 
 
 def index(request):
@@ -22,14 +22,17 @@ def newest(request):
 #     template_name = "submit.html"
 #     model = Contribution
 # view for the product entry page
-class SubmitView(CreateView):
-    model = Contribution
-    fields = ['text', 'url', 'title']
+class SubmitView(TemplateView):
+    template_name = "submit.html"
 
+    def get(self, request):
+        form = SubmitForm
+        return render(request, self.template_name, {'form': form})
 
-def submit(request):
-    return render(request, "submit.html")
+    def post(self, request):
+        form = SubmitForm(request.POST)
+        if form.is_valid():
+            form.save()
 
-
-def add(request):
-    return render(request, "submit.html")
+        form = SubmitForm()
+        return render(request, self.template_name, {'form': form})
