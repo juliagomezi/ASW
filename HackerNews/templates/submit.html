@@ -26,21 +26,21 @@
                 <tr id="pagespace" Submit style="height:10px"></tr>
                 <tr>
                     <td>
-                        <form action="{% url 'hackernews:add' %}" method="post">
+                        <form action="{% url 'index' %}" method="post">
                         {% csrf_token %}
 
                             <table border="0">
                                 <tr>
                                     <td>title</td>
                                     <td>
-                                        <input type="text" name="title" value="" size="50" oninput="tlen(this)" onfocus="tlen(this)">
+                                        <input type="text" id="title" name="title" value="" size="50" oninput="tlen(this)" onfocus="tlen(this)">
                                         <span style="margin-left:10px"></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>url</td>
                                     <td>
-                                        <input type="text" name="url" value="" size="50">
+                                        <input type="text" id="url" name="url" value="" size="50">
                                     </td>
                                 </tr>
                                 <tr>
@@ -52,7 +52,7 @@
                                 <tr>
                                     <td>text</td>
                                     <td>
-                                        <textarea name="text" rows="4" cols="49"></textarea>
+                                        <textarea id="text" name="text" rows="4" cols="49"></textarea>
                                     </td>
                                 </tr>
                                 <tr>
