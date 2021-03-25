@@ -5,6 +5,6 @@ from . import views
 urlpatterns = [
     path('news/', views.index, name='index'),
     path('newest/', views.newest, name='newest'),
-    path('submit/', views.submit, name='submit'),
+    path('submit/', views.SubmitView.as_view(), name='submit'),
     path('', views.index, name='index'),
 ]

@@ -2,8 +2,9 @@ from datetime import timezone, datetime
 
 from django.db import models
 
-
 # Create your models here.
+from django.forms import ModelForm, Textarea, TextInput, URLInput
+
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
@@ -27,10 +28,23 @@ class Contribution(models.Model):
         choices=CHOICES,
         default='url')
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=200, default="Oriol")
-    url = models.CharField(max_length=200, default="Oriol")
-    text = models.CharField(max_length=200, default="Carles")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contributions")
+    title = models.CharField(max_length=200)
+    url = models.CharField(max_length=200)
+    text = models.CharField(max_length=200)
+#    data
+#    points = models.IntegerField()
+#    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
+
+
+class SubmitForm(ModelForm):
+    class Meta:
+        model = Contribution
+        fields = ['url', 'title', 'text']
+        widgets = {
+            'url': URLInput(attrs={'size': 50}),
+            'title': TextInput(attrs={'size': 50}),
+            'text': Textarea(attrs={'cols': 49, 'rows': 4}),
+        }
