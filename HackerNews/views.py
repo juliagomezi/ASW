@@ -46,10 +46,6 @@ def ask(request):
     })
 
 
-# class SubmitView(generic.DetailView):
-#     template_name = "submit.html"
-#     model = Contribution
-# view for the product entry page
 class SubmitView(TemplateView):
     template_name = "submit.html"
 
