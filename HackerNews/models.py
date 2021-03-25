@@ -31,8 +31,8 @@ class Contribution(models.Model):
     title = models.CharField(max_length=200)
     url = models.CharField(max_length=200)
     text = models.CharField(max_length=200)
-#    data
-#    points = models.IntegerField()
+    date = models.DateTimeField(default=datetime.now, blank=True)
+    points = models.IntegerField(default=0)
 #    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
