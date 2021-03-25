@@ -5,14 +5,16 @@
     <title>Submit | Hacker News</title>
 </head>
 <body>
-<div style="text-align: center;">
-    <table id="hnmain" border="0" width="85%" bgcolor="#f6f6ef">
+<center>
+    <table id="hnmain" border="0" cellpadding="0" cellspacing="0" width="85%" bgcolor="#f6f6ef">
         <tr>
             <td bgcolor="#ff6600">
-                <table border="0" width="100%" style="padding:2px">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px">
                     <tr>
                         <td style="width:18px;padding-right:4px">
-                            <img src="/static/y18.gif" width="18" height="18" style="border:1px #ffffff solid;">
+                            <a href="{% url 'index' %}">
+                                <img src="/static/y18.gif" width="18" height="18" style="border:1px #ffffff solid;">
+                            </a>
                         </td>
                         <td style="line-height:12pt; height:10px;">
                                     <span class="pagetop">
@@ -73,6 +75,6 @@
             </td>
         </tr>
     </table>
-</div>
+</center>
 </body>
 </html>
