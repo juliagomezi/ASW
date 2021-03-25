@@ -12,6 +12,13 @@ from .models import Contribution, User
 
 
 def index(request):
+    if request.method=="POST":
+        id = 1
+        title = request.POST["title"]
+        url = request.POST["url"]
+        text = request.POST["text"]
+        c = Contribution(title=title, url=url, text=text, user_id=User.objects.all().first())
+        c.save()
     return render(request, "news.html", {
         "contributions": Contribution.objects.all()
     })
@@ -27,9 +34,6 @@ def newest(request):
 # view for the product entry page
 class SubmitView(TemplateView):
     template_name = "submit.html"
-    return render(request, "newest.html", {
-        "contributions": Contribution.objects.all()
-    })
 
     def get(self, request):
         form = SubmitForm
