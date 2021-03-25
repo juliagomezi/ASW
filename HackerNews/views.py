@@ -13,20 +13,16 @@ from .models import Contribution, User
 
 def index(request):
     return render(request, "news.html", {
-        "contributions": Contribution.objects.all()
+        "contributions": Contribution.objects.all().order_by('points')
     })
 
 
 def newest(request):
-    return render(request, "newest.html", {
-        "contributions": Contribution.objects.all()
+    return render(request, "news.html", {
+        "contributions": Contribution.objects.all().order_by('-date')
     })
 
 
-# class SubmitView(generic.DetailView):
-#     template_name = "submit.html"
-#     model = Contribution
-# view for the product entry page
 class SubmitView(TemplateView):
     template_name = "submit.html"
 
