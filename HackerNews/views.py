@@ -39,5 +39,4 @@ class SubmitView(TemplateView):
         if form.is_valid():
             form.save()
 
-        form = SubmitForm()
-        return render(request, self.template_name, {'form': form})
+        return index(request)
