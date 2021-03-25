@@ -8,6 +8,9 @@ from django.views.generic import  TemplateView
 from HackerNews.models import Contribution, User, SubmitForm
 
 
+from .models import Contribution, User
+
+
 def index(request):
     return render(request, "news.html", {
         "contributions": Contribution.objects.all()
@@ -24,6 +27,9 @@ def newest(request):
 # view for the product entry page
 class SubmitView(TemplateView):
     template_name = "submit.html"
+    return render(request, "newest.html", {
+        "contributions": Contribution.objects.all()
+    })
 
     def get(self, request):
         form = SubmitForm
