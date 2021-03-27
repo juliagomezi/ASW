@@ -12,6 +12,9 @@ class User(models.Model):
     mail = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
