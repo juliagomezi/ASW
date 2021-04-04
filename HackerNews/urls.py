@@ -10,5 +10,7 @@ urlpatterns = [
     path('login/', views.ask, name='login'),
     path('user/<int:id>', views.ask, name='user'),
     path('submit/', views.SubmitView.as_view(), name='submit'),
+    path('errormessage/', views.errormessage, name='errormessage'),
+    path('item/<int:id>/', views.item, name='item'),
     path('', views.index, name='index'),
 ]

@@ -46,6 +46,10 @@ def ask(request):
     })
 
 
+def item(request, id):
+    return render(request, "item.html")
+
+
 class SubmitView(TemplateView):
     template_name = "submit.html"
 
@@ -55,7 +59,16 @@ class SubmitView(TemplateView):
 
     def post(self, request):
         form = SubmitForm(request.POST)
+        url = request.POST.get('url')
         if form.is_valid():
+            match = Contribution.objects.filter(url=url).exists()
+            if match:
+                return errormessage(request) #SI JA EXISTEIX S'HA D'ANAR A LA PAG DE LA CONTRIBUCIO
             form.save()
+            return index(request)
+        return errormessage(request)
 
-        return redirect('/index/', request)
+
+
+def errormessage(request):
+    return render(request, "message.html")
