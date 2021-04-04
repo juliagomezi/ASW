@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block articles %}
+{% block item %}
 
     {% for contribution in contributions %}
     <tr class='athing' id={{ contribution.id }}>
@@ -25,7 +25,7 @@
         <td class="subtext">
             <span class="score" id="score_26521582">{{ contribution.points }}</span> by <a href="user?id=mg" class="hnuser">mg</a> 
             <span class="age"><a href="item?id=26521582">{{ contribution.date }}</a></span> 
-            <span id="unv_26521582"></span> | <a href="hide?id=26521582&amp;goto=news">hide</a> | <a href="item?id=26521582">34&nbsp;comments</a>              
+            <span id="unv_26521582"></span> | <a href="hide?id=26521582&amp;goto=news">hide</a> | <a href="{% url 'item' contribution.id %}">34&nbsp;comments</a>              
         </td>
     </tr>
     <tr class="spacer" style="height:5px"></tr>
