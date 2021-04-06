@@ -18,7 +18,7 @@ def index(request):
 
 
 def newest(request):
-    return render(request, "newest.html", {
+    return render(request, "news.html", {
         "contributions": Contribution.objects.all(),
         "submit": False,
         "selected": "newest"
@@ -26,7 +26,7 @@ def newest(request):
 
 
 def threads(request):
-    return render(request, "newest.html", {
+    return render(request, "news.html", {
         "contributions": Contribution.objects.all(),
         "submit": False,
         "selected": "threads"
@@ -37,7 +37,7 @@ def ask(request):
     user = User()
     user.id = 123
     user.name = "Reus>Tgn"
-    return render(request, "newest.html", {
+    return render(request, "news.html", {
         "contributions": Contribution.objects.all(),
         "submit": False,
         "selected": "ask",
