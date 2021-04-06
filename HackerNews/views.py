@@ -50,6 +50,10 @@ def item(request, id):
     return render(request, "item.html")
 
 
+def item(request, id):
+    return render(request, "item.html")
+
+
 class SubmitView(TemplateView):
     template_name = "submit.html"
 
