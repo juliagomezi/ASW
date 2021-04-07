@@ -7,19 +7,6 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea, TextInput, URLInput
 
 
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
-    mail = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
 class Contribution(models.Model):
     URL = 'url'
     ASK = 'ask'
@@ -37,7 +24,8 @@ class Contribution(models.Model):
     text = models.CharField(max_length=200, blank=True)
     date = models.DateTimeField(default=datetime.now, blank=True)
     points = models.IntegerField(default=0)
-#    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    #    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -71,8 +59,6 @@ class SubmitForm(ModelForm):
         text = cd.get('text')
 
         if not url and not text:
-
             raise ValidationError("FORMINCOMPLET")
 
         return cd
-

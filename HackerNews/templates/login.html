@@ -7,35 +7,39 @@
 </head>
 <body>
 <b>Login</b><br><br>
-<form method="post" action="login"><input type="hidden" name="goto" value="news">
+<form method="post" >
+    {% csrf_token %}
     <table border="0">
         <tr>
             <td>username:</td>
-            <td><input type="text" name="acct" size="20" autocorrect="off" spellcheck="false" autocapitalize="off"
-                       autofocus="true"></td>
+            <td>{{ a_form.username }}</td>
         </tr>
         <tr>
             <td>password:</td>
-            <td><input type="password" name="pw" size="20"></td>
+            <td>{{ a_form.password }}</td>
         </tr>
     </table>
     <br>
-    <input type="submit" value="login"></form>
-<b>Create Account</b><br><br>
-<form method="post" action="login"><input type="hidden" name="goto" value="news"><input type="hidden" name="creating"
-                                                                                        value="t">
+    <input type="submit" name="{{a_form.prefix}}" value="login">
+<br><br>
+    <b>Create Account</b><br><b>{{ c_form.errors }}</b><br>
     <table border="0">
         <tr>
             <td>username:</td>
-            <td><input type="text" name="acct" size="20" autocorrect="off" spellcheck="false" autocapitalize="off"></td>
+            <td>{{ c_form.username }}</td>
         </tr>
         <tr>
             <td>password:</td>
-            <td><input type="password" name="pw" size="20"></td>
+            <td>{{ c_form.password1 }}</td>
+        </tr>
+        <tr>
+            <td>Repeat password:</td>
+            <td>{{ c_form.password2 }}</td>
         </tr>
     </table>
     <br>
-    <input type="submit" value="create account"></form>
+    <input type="submit" name="{{c_form.prefix}}" value="create account">
+</form>
     <br>
     <a href="{% provider_login_url 'google' %}">Login with Google</a>
 </body>
