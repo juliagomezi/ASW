@@ -19,10 +19,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7fwm8wyg6*09=y^k!r&^&@usoom53378wx8l(p@v4hu(ov=po4'
+# SECRET_KEY = '7fwm8wyg6*09=y^k!r&^&@usoom53378wx8l(p@v4hu(ov=po4'
+import os
 
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '7fwm8wyg6*09=y^k!r&^&@usoom53378wx8l(p@v4hu(ov=po4')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
 
 ALLOWED_HOSTS = []
 
@@ -117,7 +119,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 PROJECT_ROOT = os.path.join(os.path.abspath(__file__))
@@ -157,5 +158,6 @@ import django_heroku
 django_heroku.settings(locals())
 
 import dj_database_url
-prod_db  =  dj_database_url.config(conn_max_age=500)
+
+prod_db = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
