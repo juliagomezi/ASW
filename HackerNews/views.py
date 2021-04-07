@@ -46,6 +46,10 @@ def ask(request):
     })
 
 
+def login(request):
+    return render(request, "login.html")
+
+
 def item(request, id):
     return render(request, "item.html")
 
@@ -67,11 +71,10 @@ class SubmitView(TemplateView):
         if form.is_valid():
             match = Contribution.objects.filter(url=url).exists()
             if match:
-                return errormessage(request) #SI JA EXISTEIX S'HA D'ANAR A LA PAG DE LA CONTRIBUCIO
+                return errormessage(request)  # SI JA EXISTEIX S'HA D'ANAR A LA PAG DE LA CONTRIBUCIO
             form.save()
             return index(request)
         return errormessage(request)
-
 
 
 def errormessage(request):
