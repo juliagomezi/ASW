@@ -8,6 +8,7 @@ urlpatterns = [
     path('threads/', views.threads, name='threads'),
     path('ask/', views.ask, name='ask'),
     path('login/', views.login, name='login'),
+    path('logout/', views.signout, name='logout'),
     path('user/<int:id>', views.ask, name='user'),
     path('submit/', views.SubmitView.as_view(), name='submit'),
     path('errormessage/', views.errormessage, name='errormessage'),

@@ -51,11 +51,10 @@
                             </td>
                             <td style="text-align:right;padding-right:4px;">
                                 <span class="pagetop">
-                                {% if logged %}
-                                    <a id="me" href="{% url 'user' id=user.id %}">{{ user.password }}</a>
+                                {% if user.is_authenticated %}
+                                    <a id="me" href="{% url 'user' id=user.id %}">{{ user.username }}</a>
                                     ({{ user.karma }}) |
-                                    <a id="logout"
-                                       href="logout?auth=d140d8aa45fbdefc68b1581cb634aefd257737d8&amp;goto=news">logout</a>
+                                    <a href="{% url 'logout' %}">logout</a>
                                 {% else %}
                                     <a href="{% url 'login' %}">login</a>
                                     {%  endif %}

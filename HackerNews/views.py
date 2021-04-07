@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.forms import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -46,10 +47,6 @@ def ask(request):
     })
 
 
-def login(request):
-    return render(request, "login.html")
-
-
 def item(request, id):
     return render(request, "item.html")
 
@@ -79,3 +76,15 @@ class SubmitView(TemplateView):
 
 def errormessage(request):
     return render(request, "message.html")
+
+
+def login(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+
+    return render(request, "login.html")
+
+
+def signout(request):
+    logout(request)
+    return redirect('/')
