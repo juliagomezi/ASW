@@ -1,4 +1,5 @@
 from django.urls import path, re_path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -12,5 +13,5 @@ urlpatterns = [
     path('submit/', views.SubmitView.as_view(), name='submit'),
     path('errormessage/', views.errormessage, name='errormessage'),
     path('item/<int:id>/', views.item, name='item'),
-    path('', views.index, name='index'),
+    path('', TemplateView.as_view(template_name="index.html"), name='index'),
 ]
