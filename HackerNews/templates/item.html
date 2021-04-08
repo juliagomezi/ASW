@@ -13,10 +13,10 @@
                     <div class="votearrow" title="upvote"></div>
                 </a>
             </td>
-            <td class="title"><a href="https://www.brown.edu/news/2021-03-31/braingate-wireless" class="storylink">Human use of high-bandwidth wireless brain-computer interface</a><span class="sitebit comhead"> (<a href="from?site=brown.edu"><span class="sitestr">brown.edu</span></a>)</span></td></tr><tr><td colspan="2"></td><td class="subtext">
-                <span class="score" id="score_26690126">128 points</span> by <a href="user?id=bemmu" class="hnuser">bemmu</a> 
-                <span class="age"><a href="item?id=26690126">2 hours ago</a></span> 
-                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="vote?id=26690126&amp;how=un&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">unvote</a></span> | <a href="hide?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">hide</a> | <a href="https://hn.algolia.com/?query=Human%20use%20of%20high-bandwidth%20wireless%20brain-computer%20interface&amp;type=story&amp;dateRange=all&amp;sort=byDate&amp;storyText=false&amp;prefix&amp;page=0" class="hnpast">past</a> | <a href="fave?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c">favorite</a> | <a href="item?id=26690126">59&nbsp;comments</a>              
+            <td class="title"><a href={{ contribution.url }} class="storylink"> {{ contribution.title }} </a><span class="sitebit comhead"> (<a href={{ contribution.url }}><span class="sitestr">{{ contribution.url }}</span></a>)</span></td></tr><tr><td colspan="2"></td><td class="subtext">
+                <span class="score" id="score_26690126">{{ contribution.points }}</span> by <a href="user?id=bemmu" class="hnuser">user</a> 
+                <span class="age"><a href="item?id=26690126">{{ contribution.date }}</a></span>
+                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="vote?id=26690126&amp;how=un&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">unvote</a></span> | <a href="hide?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">hide</a> | <a href="https://hn.algolia.com/?query=Human%20use%20of%20high-bandwidth%20wireless%20brain-computer%20interface&amp;type=story&amp;dateRange=all&amp;sort=byDate&amp;storyText=false&amp;prefix&amp;page=0" class="hnpast">past</a> | <a href="fave?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c">favorite</a> | <a href="">59&nbsp;comments</a>              
             </td>
         </tr>
         <tr style="height:10px"></tr><tr><td colspan="2"></td>
@@ -33,6 +33,7 @@
 
 <!-- comments -->
 
+{% for comment in comments %}
 <table border="0" class="comment-tree">
     <tbody>
         <tr class="athing comtr" id="26690474">
@@ -52,7 +53,7 @@
                                 <div style="margin-top:2px; margin-bottom:-10px;">
                                     <span class="comhead">
                                         <a href="user?id=burlesona" class="hnuser">burlesona</a> 
-                                        <span class="age"><a href="item?id=26690474">1 hour ago</a></span> 
+                                        <span class="age"><a href="item?id=26690474"> {{ comment.date }} </a></span> 
                                         <span id="unv_26690474"></span>
                                         <span class="par"></span>
                                         <a class="togg" n="21" href="javascript:void(0)" onclick="return toggle(event, 26690474)">[–]</a>
@@ -61,7 +62,7 @@
                                 </div>
                                 <br>
                                 <div class="comment">
-                                    <span class="commtext c00">So back in the 60's, people looked back at the progress over the previous decades, imagined the future, and thought about space. We'd have commercial space flight any day now. The most poignant scene I can think of: in 2001 A Space Odyssey, the character flies on a Pan-Am spaceship to the moon, and then goes into a <i>phone booth to make a phone call.</i><p>Fast forward and it turns out that we had been near the top of an s-curve when it came to space tech, but near the bottom of the s-curve of computers, and few people back then were imagining (could imagine?) how different the world would be 50 years later with everyone carrying around internet-connected supercomputers in their pocket.</p><p>I think we may be in the same situation today, where people imagine the future and think AI revolution and computational everything, but are mostly missing that we're at the bottom of a biotech s-curve that is going to blow "computer" progress out of the water over the next 50-60 years.</p><p>My guess is that in 60 years our computer technology will be largely similar to today, just faster and nicer. But in the same way that the mature industrial revolution made high-precision manufacturing possible which made incredible computers possible, our mature computer technology is now enabling incredible progress in biotech. And the explosion of biotech will lead to mind-blowing changes that are difficult to even imagine.</p><p>From this article: no more keyboards / mice? No typing, you can "think" to write. What about recording your own thoughts and then playing them back to yourself later? How much further can that tech go? And there is so much more beyond BCI, we are just understanding the basic building blocks in many areas, but making amazing progress.</p><p>I'm excited about it.</p>
+                                    <span class="commtext c00"> {{ comment.text }}
                                     <div class="reply">
                                         <p>
                                             <font size="1">
@@ -79,5 +80,5 @@
         </tr>
     </tbody>
 </table>
-    
+{% endfor %}
 {% endblock %}

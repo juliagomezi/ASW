@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.views import generic
 from django.views.generic import TemplateView
 
-from HackerNews.models import Contribution, SubmitForm
+from HackerNews.models import Contribution, SubmitForm, Comment
 
-from .models import Contribution
+from .models import Contribution, Comment
 
 
 def index(request):
@@ -44,11 +44,10 @@ def ask(request):
 
 
 def item(request, id):
-    return render(request, "item.html")
-
-
-def item(request, id):
-    return render(request, "item.html")
+    return render(request, "item.html", {
+        "contribution": Contribution.objects.get(id=id),
+        "comments": Comment.objects.filter(contribution=Contribution.objects.get(id=id))
+    })
 
 
 class SubmitView(TemplateView):
@@ -64,9 +63,9 @@ class SubmitView(TemplateView):
         if form.is_valid():
             match = Contribution.objects.filter(url=url).exists()
             if match:
-                return errormessage(request)  # SI JA EXISTEIX S'HA D'ANAR A LA PAG DE LA CONTRIBUCIO
+                return redirect('../item/'+ str(Contribution.objects.get(url=url).id))
             form.save()
-            return index(request)
+            return redirect('/')
         return errormessage(request)
 
 
