@@ -13,6 +13,13 @@ from .models import Contribution, Comment
 
 
 def index(request):
+    if request.method == 'POST':
+        id = request.POST.get('id')
+        contribution = Contribution.objects.get(id=id)
+        contribution.points = contribution.points + 1
+        contribution.save()
+        return redirect('/')
+    
     return render(request, "news.html", {
         "contributions": Contribution.objects.all(),
         "submit": False
