@@ -6,13 +6,13 @@
     <tr class='athing' id={{ contribution.id }}>
         <td align="right" valign="top" class="title">
             <span class="rank">{{ forloop.counter }}.</span>
-        </td>      
-        <td valign="top" class="votelinks"><center>
-            <a id='up_26521582' href='vote?id=26521582&amp;how=up&amp;goto=news'>
-                <div class='votearrow' title='upvote'></div>
-            </a>
-        </center>
         </td>
+        <form method="POST">
+            {% csrf_token %}
+            <td valign="top" class="votelinks">
+                <button type="submit" class='votearrow' title='upvote' name='id' value={{ contribution.id }}></button>
+            </td>
+        </form>
         <td class="title">
             <a href={{ contribution.url }} class="storylink">{{ contribution.title }}</a>
             <span class="sitebit comhead"> 
