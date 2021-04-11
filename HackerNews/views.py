@@ -21,14 +21,14 @@ def index(request):
         return redirect('/')
     
     return render(request, "news.html", {
-        "contributions": Contribution.objects.all(),
+        "contributions": Contribution.objects.all().order_by('-points'),
         "submit": False
     })
 
 
 def newest(request):
     return render(request, "news.html", {
-        "contributions": Contribution.objects.all(),
+        "contributions": Contribution.objects.all().order_by('-date'),
         "submit": False,
         "selected": "newest"
     })
@@ -51,9 +51,21 @@ def ask(request):
 
 
 def item(request, id):
-    return render(request, "item.html", {
+    if request.method == 'POST':
+        comment = Comment()
+        comment.contribution = Contribution.objects.get(id=request.POST.get('contribution'))
+        comment.text = request.POST.get('text')
+        level = request.POST.get('level')
+        comment.level = level
+        if level != 0:
+            comment.father = request.POST.get('father')
+        
+        comment.save()
+        return redirect('/item/'+ str(request.POST.get('contribution')))
+
+    return render(request, "comment.html", {
         "contribution": Contribution.objects.get(id=id),
-        "comments": Comment.objects.filter(contribution=Contribution.objects.get(id=id))
+        "comments": Comment.objects.filter(contribution=Contribution.objects.get(id=id)).order_by('-date')
     })
 
 

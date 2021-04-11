@@ -33,11 +33,13 @@ class Contribution(models.Model):
 
 
 class Comment(models.Model):
-    id = models.AutoField(primary_key=True)
+    level = models.IntegerField(default=0)
+    #creator = models.ForeignKey(User, on_delete=models.SET_NULL)
     text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
     date = models.DateTimeField(default=datetime.now, blank=True)
     contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE)
+    father = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.text
