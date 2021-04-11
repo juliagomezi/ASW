@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views import generic
 from django.views.generic import TemplateView
 
-from HackerNews.models import Contribution, SubmitForm, Comment
+from HackerNews.models import Comment, Contribution, Point, SubmitForm
 
 from .models import Contribution, Comment
 
@@ -120,3 +120,9 @@ class LoginView(TemplateView):
                 return redirect('/')
 
         return self.render_to_response({'c_form': creationForm, 'a_form': AuthenticationForm(prefix='login')})
+
+def createuser(request):
+	if not Point.objects.filter(user=request.user).exists():
+		points = Point(user=request.user)
+		points.save()
+	return redirect('/')

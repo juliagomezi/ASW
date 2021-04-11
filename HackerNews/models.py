@@ -5,6 +5,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 # Create your models here.
 from django.forms import ModelForm, Textarea, TextInput, URLInput
+from django.contrib.auth.models import User
 
 
 class Contribution(models.Model):
@@ -63,3 +64,7 @@ class SubmitForm(ModelForm):
             raise ValidationError("FORMINCOMPLET")
 
         return cd
+
+class Point(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	karma = models.IntegerField(default=0)
