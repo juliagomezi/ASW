@@ -12,6 +12,7 @@ urlpatterns = [
     path('submit/', views.SubmitView.as_view(), name='submit'),
     path('errormessage/', views.errormessage, name='errormessage'),
     path('item/<int:id>/', views.item, name='item'),
+    path('reply/<int:id>/', views.reply, name='reply'),
     path('createuser/', views.createuser, name='createuser'),
     path('', views.index, name='index'),
 ]

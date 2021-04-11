@@ -69,6 +69,22 @@ def item(request, id):
     })
 
 
+def reply(request,id):
+    if request.method == 'POST':
+        father = Comment.objects.get(id=request.POST.get('father'))
+        comment = Comment()
+        comment.text = request.POST.get('text')
+        comment.father = father
+        comment.level = father.level + 1
+        comment.contribution = father.contribution
+        comment.save()
+        return redirect('/item/' + str(father.contribution.id))
+
+    return render(request, "reply.html", {
+        "comment": Comment.objects.get(id=id)
+    })
+
+
 class SubmitView(TemplateView):
     template_name = "submit.html"
 

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block item %}
+
+<table class="fatitem">
+    <tbody>
+        <tr>
+            <td class="ind">
+                <img src="s.gif" height="1" width="0">
+            </td>
+            <td valign="top" class="votelinks">
+                <center>
+                    <a id="up_26690474" onclick="return vote(event, this, &quot;up&quot;)" href="vote?id=26690474&amp;how=up&amp;auth=0344148a501088cdc0d10e6adac2c59c0d5190d9&amp;goto=item%3Fid%3D26690126#26690474"><div class="votearrow" title="upvote"></div></a>
+                </center>
+            </td>
+            <td class="default">
+                <div style="margin-top:2px; margin-bottom:-10px;">
+                    <span class="comhead">
+                        <a href="user?id=burlesona" class="hnuser">burlesona</a> 
+                        <span class="age"><a href="item?id=26690474"> {{ comment.date }} </a></span> 
+                        <span id="unv_26690474"></span>
+                        <span class="par"></span>
+                        <a class="togg" n="21" href="javascript:void(0)" onclick="return toggle(event, 26690474)">[–]</a>
+                        <span class="storyon"></span>
+                    </span>
+                </div>
+                <br>
+                <div class="comment">
+                    <span class="commtext c00"> {{ comment.text }}
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr style="height:10px"></tr><tr><td colspan="2"></td>
+            <td>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="father" value={{ comment.id }}>
+                    <textarea name="text" rows="6" cols="60"></textarea>
+                    <br><br><input type="submit" value="reply">
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}
