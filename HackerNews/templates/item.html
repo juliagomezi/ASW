@@ -14,9 +14,15 @@
                 </a>
             </td>
             <td class="title"><a href={{ contribution.url }} class="storylink"> {{ contribution.title }} </a><span class="sitebit comhead"> (<a href={{ contribution.url }}><span class="sitestr">{{ contribution.url }}</span></a>)</span></td></tr><tr><td colspan="2"></td><td class="subtext">
-                <span class="score" id="score_26690126">{{ contribution.points }}</span> by <a href="user?id=bemmu" class="hnuser">user</a> 
+                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="user?id=bemmu" class="hnuser">{{ contribution.author }}</a> 
                 <span class="age"><a href="item?id=26690126">{{ contribution.date }}</a></span>
-                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="vote?id=26690126&amp;how=un&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">unvote</a></span> | <a href="hide?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">hide</a> | <a href="https://hn.algolia.com/?query=Human%20use%20of%20high-bandwidth%20wireless%20brain-computer%20interface&amp;type=story&amp;dateRange=all&amp;sort=byDate&amp;storyText=false&amp;prefix&amp;page=0" class="hnpast">past</a> | <a href="fave?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c">favorite</a> | <a href="">59&nbsp;comments</a>              
+                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="vote?id=26690126&amp;how=un&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">unvote</a></span> | <a href="hide?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">hide</a> | <a href="https://hn.algolia.com/?query=Human%20use%20of%20high-bandwidth%20wireless%20brain-computer%20interface&amp;type=story&amp;dateRange=all&amp;sort=byDate&amp;storyText=false&amp;prefix&amp;page=0" class="hnpast">past</a> | <a href="fave?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c">favorite</a> | <a href="">
+                    {% if contribution.comments.count == 0 %}
+                        discuss
+                    {% else %}
+                        {{ contribution.comments.count }} comments
+                    {% endif %}
+                </a>              
             </td>
         </tr>
         <tr style="height:10px"></tr><tr><td colspan="2"></td>
