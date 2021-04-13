@@ -36,8 +36,25 @@
 <!-- comments -->
 
 {% for comment in comments %}
-    {% block comment %}
-    {% endblock %}
+<table border="0" class="comment-tree">
+    <tbody>
+        <tr class="athing comtr" id="26690474">
+            <td>
+                <div class="round" style="--margin: {{ comment.level }}px;">
+                    <style>
+                        .round {
+                            margin-left: calc(40 * var(--margin));
+                        }
+                    </style>
+                    <table border= "0">
+                    {% block comment %}
+                    {% endblock %}
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
 {% endfor %}
 
 {% endblock %}

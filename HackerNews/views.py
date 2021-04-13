@@ -11,6 +11,8 @@ from HackerNews.models import Comment, Contribution, Point, SubmitForm
 
 from .models import Contribution, Comment
 
+import time
+
 
 def index(request):
     if request.method == 'POST':
@@ -50,6 +52,9 @@ def ask(request):
     })
 
 
+comments = []
+fathers = []
+
 def item(request, id):
     if request.method == 'POST':
         comment = Comment()
@@ -63,10 +68,30 @@ def item(request, id):
         comment.save()
         return redirect('/item/'+ str(request.POST.get('contribution')))
 
+    fathers = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=0)
+    comments=[]
+
+    for com in fathers:
+        comments.append(com)
+        orderComments(1,com,comments,id)
+
+    
     return render(request, "comment.html", {
         "contribution": Contribution.objects.get(id=id),
-        "comments": Comment.objects.filter(contribution=Contribution.objects.get(id=id)).order_by('-date')
+        "comments": comments
     })
+
+
+def orderComments(i,father,comments,id):
+    children = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=i).filter(father=father)
+    for child in children:
+        gchildren = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=i+1).filter(father=child)
+    
+        if len(gchildren)==0:
+            comments.append(child)
+        else:
+            comments.append(child)
+            orderComments(i+1,child,comments,id)
 
 
 def reply(request,id):
