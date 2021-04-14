@@ -7,25 +7,32 @@
         <td align="right" valign="top" class="title">
             <span class="rank">{{ forloop.counter }}.</span>
         </td>
-        <form method="POST">
+        <form method="POST" action="/vote/">
             {% csrf_token %}
             <td valign="top" class="votelinks">
+                <input type="hidden" name="next" value="{{ request.path }}">
                 <button type="submit" class='votearrow' title='upvote' name='id' value={{ contribution.id }}></button>
             </td>
         </form>
         <td class="title">
-            <a href={{ contribution.url }} class="storylink">{{ contribution.title }}</a>
-            <span class="sitebit comhead"> 
-                (<a href={{ contribution.url }}><span class="sitestr"> {{ contribution.url }}</span></a>)
-            </span>
+            {% if contribution.type == "url" %}
+                <a href={{ contribution.url }} class="storylink">{{ contribution.title }} </a>
+            {% else %}
+                <a href="{% url 'item' contribution.id %}" class="storylink">{{ contribution.title }} </a>
+            {% endif %}
+            {% if contribution.type == "url" %}
+                <span class="sitebit comhead"> 
+                    (<a href={{ contribution.url }}><span class="sitestr">{{ contribution.url }}</span></a>)
+                </span>
+            {% endif %}
         </td>
     </tr>
     <tr>
         <td colspan="2"></td>
         <td class="subtext">
-            <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="user?id=mg" class="hnuser">{{ contribution.author }}</a> 
-            <span class="age"><a href="item?id=26521582">{{ contribution.date }}</a></span> 
-            <span id="unv_26521582"></span> | <a href="hide?id=26521582&amp;goto=news">hide</a> | <a href="{% url 'item' contribution.id %}">
+            <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="" class="hnuser">{{ contribution.author }}</a> 
+            <span class="age"><a href="">{{ contribution.date }}</a></span> 
+            <span id="unv_26521582"></span> | <a href="">hide</a> | <a href="{% url 'item' contribution.id %}">
             {% if contribution.comments.count == 0 %}
                 discuss
             {% else %}

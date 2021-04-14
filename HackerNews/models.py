@@ -25,8 +25,7 @@ class Contribution(models.Model):
     text = models.CharField(max_length=200, blank=True)
     date = models.DateTimeField(default=datetime.now, blank=True)
     points = models.IntegerField(default=0)
-
-    #    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    #author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -35,7 +34,7 @@ class Contribution(models.Model):
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     level = models.IntegerField(default=0)
-    #creator = models.ForeignKey(User, on_delete=models.SET_NULL)
+    #author = models.ForeignKey(User, on_delete=models.SET_NULL)
     text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
     date = models.DateTimeField(default=datetime.now, blank=True)

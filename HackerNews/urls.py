@@ -14,5 +14,6 @@ urlpatterns = [
     path('item/<int:id>/', views.item, name='item'),
     path('reply/<int:id>/', views.reply, name='reply'),
     path('createuser/', views.createuser, name='createuser'),
+    path('vote/', views.vote, name='vote'),
     path('', views.index, name='index'),
 ]

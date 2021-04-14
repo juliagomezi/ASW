@@ -8,15 +8,31 @@
             <td textalign="right" valign="top" class="title">
                 <span class="rank"></span>
             </td>      
-            <td valign="top" class="votelinks">
-                <a id="up_26690126" onclick="return vote(event, this, &quot;up&quot;)" href="vote?id=26690126&amp;how=up&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126" class="nosee">
-                    <div class="votearrow" title="upvote"></div>
-                </a>
+            <form method="POST" action="/vote/">
+                {% csrf_token %}
+                <td valign="top" class="votelinks">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class='votearrow' title='upvote' name='id' value={{ contribution.id }}></button>
+                </td>
+            </form>
+            <td class="title">
+                {% if contribution.type == "url" %}
+                    <a href={{ contribution.url }} class="storylink">{{ contribution.title }} </a>
+                {% else %}
+                    <a href="" class="storylink">{{ contribution.title }} </a>
+                {% endif %}
+                <span class="sitebit comhead">
+                {% if contribution.type == "url" %}
+                    (<a href={{ contribution.url }}><span class="sitestr">{{ contribution.url }}</span></a>)
+                {% endif %}
+                </span>
             </td>
-            <td class="title"><a href={{ contribution.url }} class="storylink"> {{ contribution.title }} </a><span class="sitebit comhead"> (<a href={{ contribution.url }}><span class="sitestr">{{ contribution.url }}</span></a>)</span></td></tr><tr><td colspan="2"></td><td class="subtext">
-                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="user?id=bemmu" class="hnuser">{{ contribution.author }}</a> 
-                <span class="age"><a href="item?id=26690126">{{ contribution.date }}</a></span>
-                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="vote?id=26690126&amp;how=un&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">unvote</a></span> | <a href="hide?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c&amp;goto=item%3Fid%3D26690126">hide</a> | <a href="https://hn.algolia.com/?query=Human%20use%20of%20high-bandwidth%20wireless%20brain-computer%20interface&amp;type=story&amp;dateRange=all&amp;sort=byDate&amp;storyText=false&amp;prefix&amp;page=0" class="hnpast">past</a> | <a href="fave?id=26690126&amp;auth=fb2b31518d2746b04a38905bfd2fa60e83b8153c">favorite</a> | <a href="">
+        </tr>
+        <tr>
+            <td colspan="2"></td><td class="subtext">
+                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="" class="hnuser">{{ contribution.author }}</a> 
+                <span class="age"><a href="">{{ contribution.date }}</a></span>
+                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="">unvote</a></span> | <a href="">hide</a> | <a href="" class="hnpast">past</a> | <a href="">favorite</a> | <a href="">
                     {% if contribution.comments.count == 0 %}
                         discuss
                     {% else %}
@@ -25,13 +41,20 @@
                 </a>              
             </td>
         </tr>
-        <tr style="height:10px"></tr><tr><td colspan="2"></td>
+        {% if contribution.type == "ask" %}
+            <tr>
+                <td colspan="2"></td>
+                <td>{{ contribution.text }}</td>
+            </tr>
+        {% endif %}
+        <tr style="height:10px"></tr>
+        <tr><td colspan="2"></td>
             <td>
                 <form method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="contribution" value={{ contribution.id }}>
                     <input type="hidden" name="level" value='0'>
-                    <textarea name="text" rows="6" cols="60"></textarea>
+                    <textarea name="text" rows="6" cols="60" required=true></textarea>
                     <br><br><input type="submit" value="add comment">
                 </form>
             </td>

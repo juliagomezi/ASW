@@ -36,7 +36,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="father" value={{ comment.id }}>
-                    <textarea name="text" rows="6" cols="60"></textarea>
+                    <textarea name="text" rows="6" cols="60" required=true></textarea>
                     <br><br><input type="submit" value="reply">
                 </form>
             </td>

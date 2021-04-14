@@ -13,15 +13,15 @@ from .models import Contribution, Comment
 
 import time
 
-
-def index(request):
+def vote(request):
     if request.method == 'POST':
         id = request.POST.get('id')
         contribution = Contribution.objects.get(id=id)
         contribution.points = contribution.points + 1
         contribution.save()
-        return redirect('/')
-    
+    return redirect(request.POST.get('next'))
+
+def index(request):
     return render(request, "news.html", {
         "contributions": Contribution.objects.all().order_by('-points'),
         "submit": False
@@ -46,11 +46,10 @@ def threads(request):
 
 def ask(request):
     return render(request, "news.html", {
-        "contributions": Contribution.objects.all(),
+        "contributions": Contribution.objects.filter(type="ask").order_by('-points'),
         "submit": False,
         "selected": "ask",
     })
-
 
 comments = []
 fathers = []
@@ -96,6 +95,8 @@ def orderComments(i,father,comments,id):
 
 def reply(request,id):
     if request.method == 'POST':
+        if len(request.POST.get('text'))==0:
+            return errormessage(request)
         father = Comment.objects.get(id=request.POST.get('father'))
         comment = Comment()
         comment.text = request.POST.get('text')
@@ -121,10 +122,22 @@ class SubmitView(TemplateView):
         form = SubmitForm(request.POST)
         url = request.POST.get('url')
         if form.is_valid():
-            match = Contribution.objects.filter(url=url).exists()
-            if match:
-                return redirect('../item/'+ str(Contribution.objects.get(url=url).id))
-            form.save()
+            c = Contribution()
+            c.title=request.POST.get('title')
+            c.url=request.POST.get('url')
+            if not c.url:
+                c.text=request.POST.get('text')
+                c.type='ask'
+            else:
+                match = Contribution.objects.filter(url=url).exists()
+                if match:
+                    return redirect('../item/'+ str(Contribution.objects.get(url=url).id))
+            c.save()
+            if request.POST.get('url') and request.POST.get('text'):
+                com = Comment()
+                com.text = request.POST.get('text')
+                com.contribution = Contribution.objects.get(url=c.url)
+                com.save()
             return redirect('/')
         return errormessage(request)
 
