@@ -7,11 +7,12 @@ from django.urls import reverse
 from django.views import generic
 from django.views.generic import TemplateView
 
-from HackerNews.models import Comment, Contribution, Point, SubmitForm
+from HackerNews.models import Comment, Contribution, UserDetail, SubmitForm
 
 from .models import Contribution, Comment
 
 import time
+from django.contrib.auth.models import User
 
 def vote(request):
     if request.method == 'POST':
@@ -48,13 +49,46 @@ def ask(request):
     return render(request, "news.html", {
         "contributions": Contribution.objects.filter(type="ask").order_by('-points'),
         "submit": False,
-        "selected": "ask",
+        "selected": "ask"
+    })
+
+def profile(request, id):
+    return render(request, "profile.html", {
+		"profile": User.objects.get(id=id),
+		"profileDetails": UserDetail.objects.get(id=id),
+        "submit": False
     })
 
 comments = []
 fathers = []
 
 def item(request, id):
+    if request.method == 'POST':
+        comment = Comment()
+        comment.contribution = Contribution.objects.get(id=request.POST.get('contribution'))
+        comment.text = request.POST.get('text')
+        level = request.POST.get('level')
+        comment.level = level
+        if level != 0:
+            comment.father = request.POST.get('father')
+        
+        comment.save()
+        return redirect('/item/'+ str(request.POST.get('contribution')))
+
+    fathers = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=0)
+    comments=[]
+
+    for com in fathers:
+        comments.append(com)
+        orderComments(1,com,comments,id)
+
+    
+    return render(request, "comment.html", {
+        "contribution": Contribution.objects.get(id=id),
+        "comments": comments
+    })
+
+def updateProfile(request, id):
     if request.method == 'POST':
         comment = Comment()
         comment.contribution = Contribution.objects.get(id=request.POST.get('contribution'))
@@ -188,7 +222,7 @@ class LoginView(TemplateView):
         return self.render_to_response({'c_form': creationForm, 'a_form': AuthenticationForm(prefix='login')})
 
 def createuser(request):
-	if not Point.objects.filter(user=request.user).exists():
-		points = Point(user=request.user)
-		points.save()
+	if not UserDetail.objects.filter(user=request.user).exists():
+		userDetails = UserDetail(user=request.user)
+		userDetails.save()
 	return redirect('/')

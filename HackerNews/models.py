@@ -62,11 +62,15 @@ class SubmitForm(ModelForm):
         url = cd.get('url')
         text = cd.get('text')
 
+							
         if not url and not text:
             raise ValidationError("FORMINCOMPLET")
 
         return cd
 
-class Point(models.Model):
+class UserDetail(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	karma = models.IntegerField(default=0)
+	about = models.CharField(max_length=200, blank=True, null=True)
+	email = models.EmailField(max_length=200, blank=True, null=True)
+	created = models.DateTimeField(default=datetime.now)
