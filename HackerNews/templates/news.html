@@ -15,7 +15,6 @@
                     <img src="s.gif" height="1" width="14">
                 </center>
             </td>
-
         {% elif user.is_authenticated and votes|in_category:contribution %}
              <td valign="top" class="votelinks">
                 <center>
@@ -23,7 +22,6 @@
                     <img src="s.gif" height="1" width="14">
                 </center>
             </td>
-
         {% else %}
             <form method="POST" action="/vote/">
                 {% csrf_token %}
@@ -50,16 +48,11 @@
         <td colspan="2"></td>
         <td class="subtext">
             <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="" class="hnuser">{{ contribution.author }}</a> 
-            <span class="age"><a href="">{{ contribution.date }}</a></span> 
-            <span id="unv_26521582"></span> |
-
-            <!-- UNVOTE -->
-                {% if user.is_authenticated and votes|in_category:contribution %}
-                    <a href="{% url 'unvote' id=contribution.id %}">unvote</a> |
-                {% endif %}
-            <!--UNVOTE -->
-
-                <a href="">hide</a> | <a href="{% url 'item' contribution.id %}">
+            <span class="age"><a href="">{{ contribution.date }}</a></span> |
+            {% if user.is_authenticated and votes|in_category:contribution %}
+                <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
+            {% endif %}
+            <a href="{% url 'item' contribution.id %}">
             {% if contribution.comments.count == 0 %}
                 discuss
             {% else %}

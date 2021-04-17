@@ -11,31 +11,29 @@ from django.contrib.auth.models import User
 
 
 def vote(request):
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            id = request.POST.get('id')
-            contribution = Contribution.objects.get(id=id)
-            contribution.points = contribution.points + 1
-            contribution.save()
-            contributionvote = ContributionVote()
-            contributionvote.user = request.user
-            contributionvote.contribution = contribution
-            contributionvote.save()
-        else:
-            return redirect('/login')
+    if request.user.is_authenticated:
+        id = request.POST.get('id')
+        contribution = Contribution.objects.get(id=id)
+        contribution.points = contribution.points + 1
+        contribution.save()
+        contributionvote = ContributionVote()
+        contributionvote.user = request.user
+        contributionvote.contribution = contribution
+        contributionvote.save()
+    else:
+        return redirect('/login')
     return redirect(request.POST.get('next'))
 
 
 def unvote(request, id):
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            contribution = Contribution.objects.get(id=id)
-            contribution.points = contribution.points - 1
-            contribution.save()
-            ContributionVote.object.get(user=request.user, contribution=contribution).delete()
-        else:
-            return redirect('/login')
-    return redirect('/')
+    if request.user.is_authenticated:
+        contribution = Contribution.objects.get(id=id)
+        contribution.points = contribution.points - 1
+        contribution.save()
+        ContributionVote.objects.get(user=request.user, contribution=contribution).delete()
+    else:
+        return redirect('/login')
+    return redirect(request.GET.get('next'))
 
 
 def index(request):
@@ -46,7 +44,6 @@ def index(request):
         "contributions": Contribution.objects.all().order_by('-points'),
         "submit": False,
         "votes": votes
-
     })
 
 
@@ -117,9 +114,14 @@ def item(request, id):
         comments.append(com)
         orderComments(1, com, comments, id)
 
+    voted = None
+    if request.user.is_authenticated:
+        voted = ContributionVote.objects.filter(user=request.user,contribution=Contribution.objects.get(id=id)).exists()
+
     return render(request, "comment.html", {
         "contribution": Contribution.objects.get(id=id),
-        "comments": comments
+        "comments": comments,
+        "voted": voted
     })
 
 
