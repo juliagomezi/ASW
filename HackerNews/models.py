@@ -24,8 +24,8 @@ class Contribution(models.Model):
     url = models.CharField(max_length=200, blank=True)
     text = models.CharField(max_length=200, blank=True)
     date = models.DateTimeField(default=datetime.now, blank=True)
-    points = models.IntegerField(default=0)
-    #author = models.ForeignKey(User, on_delete=models.CASCADE)
+    points = models.IntegerField(default=1)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.title
@@ -34,7 +34,7 @@ class Contribution(models.Model):
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     level = models.IntegerField(default=0)
-    #author = models.ForeignKey(User, on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
     date = models.DateTimeField(default=datetime.now, blank=True)
@@ -43,6 +43,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+class ContributionVote(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE)
+
+class CommentVote(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
 
 
 class SubmitForm(ModelForm):

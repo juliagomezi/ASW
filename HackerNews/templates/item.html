@@ -8,6 +8,23 @@
             <td textalign="right" valign="top" class="title">
                 <span class="rank"></span>
             </td>      
+            {% if user.username == contribution.author.username %}
+            <td valign="top" class="votelinks">
+                <center>
+                    <font color="#ff6600">*</font>
+                    <br>
+                    <img src="s.gif" height="1" width="14">
+                </center>
+            </td>
+
+        {% elif contribution in votes %}
+            <td valign="top" class="votelinks">
+                <center>
+                    <br>
+                    <img src="s.gif" height="1" width="14">
+                </center>
+            </td>
+        {% else %}
             <form method="POST" action="/vote/">
                 {% csrf_token %}
                 <td valign="top" class="votelinks">
@@ -15,6 +32,7 @@
                     <button type="submit" class='votearrow' title='upvote' name='id' value={{ contribution.id }}></button>
                 </td>
             </form>
+        {% endif %}
             <td class="title">
                 {% if contribution.type == "url" %}
                     <a href={{ contribution.url }} class="storylink">{{ contribution.title }} </a>
@@ -30,9 +48,9 @@
         </tr>
         <tr>
             <td colspan="2"></td><td class="subtext">
-                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="" class="hnuser">{{ contribution.author }}</a> 
+                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="{% url 'user' id=contribution.author.id %}" class="hnuser">{{ contribution.author }}</a>
                 <span class="age"><a href="">{{ contribution.date }}</a></span>
-                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="">unvote</a></span> | <a href="">hide</a> | <a href="" class="hnpast">past</a> | <a href="">favorite</a> | <a href="">
+                <span id="unv_26690126"> | <a id="un_26690126" onclick="return vote(event, this, &quot;un&quot;)" href="">unvote</a></span> | <a href="">
                     {% if contribution.comments.count == 0 %}
                         discuss
                     {% else %}
