@@ -8,17 +8,38 @@
             <td class="ind">
                 <img src="s.gif" height="1" width="0">
             </td>
-            <td valign="top" class="votelinks">
-                <center>
-                    <a id="up_26690474" onclick="return vote(event, this, &quot;up&quot;)" href="vote?id=26690474&amp;how=up&amp;auth=0344148a501088cdc0d10e6adac2c59c0d5190d9&amp;goto=item%3Fid%3D26690126#26690474"><div class="votearrow" title="upvote"></div></a>
-                </center>
-            </td>
+            {% if user.username == comment.author.username %}
+                <td valign="top" class="votelinks">
+                    <center>
+                        <font color="#ff6600">*</font>
+                        <br>
+                        <img src="s.gif" height="1" width="14">
+                    </center>
+                </td>
+            {% elif user.is_authenticated and voted %}
+                <td valign="top" class="votelinks">
+                    <center>
+                        <br>
+                        <img src="s.gif" height="1" width="14">
+                    </center>
+                </td>
+            {% else %}
+                <form method="POST" action="/votecomment/">
+                    {% csrf_token %}
+                    <td valign="top" class="votelinks">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit" class='votearrow' title='upvote' name='id' value={{ comment.id }}></button>
+                    </td>
+                </form>
+            {% endif %}
             <td class="default">
                 <div style="margin-top:2px; margin-bottom:-10px;">
                     <span class="comhead">
                         <a href="{% url 'user' id=comment.author.id %}" class="hnuser">{{ comment.author.username }}</a>
                         <span class="age"><a href=""> {{ comment.date }} </a></span>
-                        <span id="unv_26690474"></span>
+                        {% if user.is_authenticated and voted %}
+                           | <a href="{% url 'unvotecomment' id=comment.id %}?next={{ request.path }}">unvote</a>
+                        {% endif %}
                         <span class="par"></span>
                         <span class="storyon"></span>
                     </span>

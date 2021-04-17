@@ -15,6 +15,8 @@ urlpatterns = [
     path('reply/<int:id>/', views.reply, name='reply'),
     path('createuser/', views.createuser, name='createuser'),
     path('vote/', views.vote, name='vote'),
+    path('votecomment/', views.votecomment, name='votecomment'),
+    path('unvotecomment/<int:id>', views.unvotecomment, name='unvotecomment'),
     path('unvote/<int:id>', views.unvote, name='unvote'),
     path('', views.index, name='index'),
 ]

@@ -5,7 +5,7 @@ from django.template.defaultfilters import register
 
 from django.views.generic import TemplateView
 
-from HackerNews.models import Comment, Contribution, UserDetail, SubmitForm, ContributionVote
+from HackerNews.models import Comment, Contribution, UserDetail, SubmitForm, ContributionVote, CommentVote
 
 from django.contrib.auth.models import User
 
@@ -31,6 +31,32 @@ def unvote(request, id):
         contribution.points = contribution.points - 1
         contribution.save()
         ContributionVote.objects.get(user=request.user, contribution=contribution).delete()
+    else:
+        return redirect('/login')
+    return redirect(request.GET.get('next'))
+
+
+def votecomment(request):
+    if request.user.is_authenticated:
+        id = request.POST.get('id')
+        comment = Comment.objects.get(id=id)
+        comment.votes = comment.votes + 1
+        comment.save()
+        commentvote = CommentVote()
+        commentvote.user = request.user
+        commentvote.comment = comment
+        commentvote.save()
+    else:
+        return redirect('/login')
+    return redirect(request.POST.get('next'))
+
+
+def unvotecomment(request, id):
+    if request.user.is_authenticated:
+        comment = Comment.objects.get(id=id)
+        comment.votes = comment.votes - 1
+        comment.save()
+        CommentVote.objects.get(user=request.user, comment=comment).delete()
     else:
         return redirect('/login')
     return redirect(request.GET.get('next'))
@@ -115,13 +141,16 @@ def item(request, id):
         orderComments(1, com, comments, id)
 
     voted = None
+    votedcomments = None
     if request.user.is_authenticated:
         voted = ContributionVote.objects.filter(user=request.user,contribution=Contribution.objects.get(id=id)).exists()
+        votedcomments = CommentVote.objects.filter(user=request.user)
 
     return render(request, "comment.html", {
         "contribution": Contribution.objects.get(id=id),
         "comments": comments,
-        "voted": voted
+        "voted": voted,
+        "votedcomments": votedcomments
     })
 
 
@@ -181,8 +210,10 @@ def reply(request, id):
         comment.author = request.user
         comment.save()
         return redirect('/item/' + str(father.contribution.id))
+
     return render(request, "reply.html", {
-        "comment": Comment.objects.get(id=id)
+        "comment": Comment.objects.get(id=id),
+        "voted": CommentVote.objects.filter(user=request.user,comment=Comment.objects.get(id=id)).exists()
     })
 
 
@@ -276,3 +307,7 @@ def createuser(request):
 @register.filter
 def in_category(things, contribution):
     return things.filter(contribution=contribution)
+
+@register.filter
+def in_category2(things, comment):
+    return things.filter(comment=comment)
