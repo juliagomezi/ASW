@@ -44,14 +44,15 @@ class Comment(models.Model):
     def __str__(self):
         return self.text
 
+
 class ContributionVote(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     contribution = models.ForeignKey(Contribution, on_delete=models.CASCADE)
 
+
 class CommentVote(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-
 
 
 class SubmitForm(ModelForm):
@@ -60,8 +61,8 @@ class SubmitForm(ModelForm):
         fields = ['url', 'title', 'text']
         widgets = {
             'url': URLInput(attrs={'size': 50}),
-            'title': TextInput(attrs={'size': 50,'required': False}),
-            'text': Textarea(attrs={'cols': 49, 'rows': 4,'required': False}),
+            'title': TextInput(attrs={'size': 50, 'required': False}),
+            'text': Textarea(attrs={'cols': 49, 'rows': 4, 'required': False}),
         }
 
     def clean(self):
@@ -71,15 +72,15 @@ class SubmitForm(ModelForm):
         url = cd.get('url')
         text = cd.get('text')
 
-							
         if not url and not text:
             raise ValidationError("FORMINCOMPLET")
 
         return cd
 
+
 class UserDetail(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	karma = models.IntegerField(default=0)
-	about = models.CharField(max_length=200, blank=True, null=True)
-	email = models.EmailField(max_length=200, blank=True, null=True)
-	created = models.DateTimeField(default=datetime.now)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    karma = models.IntegerField(default=0)
+    about = models.CharField(max_length=200, blank=True, null=True)
+    email = models.EmailField(max_length=200, blank=True, null=True)
+    created = models.DateTimeField(default=datetime.now)

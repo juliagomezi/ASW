@@ -64,12 +64,15 @@ def unvotecomment(request, id):
 
 def index(request):
     votes = None
+    karma = 0
     if request.user.is_authenticated:
         votes = ContributionVote.objects.filter(user=request.user).values_list('contribution', flat=True)
+        karma = UserDetail.objects.get(user=request.user).karma
     return render(request, "news.html", {
         "contributions": Contribution.objects.all().order_by('-points'),
         "submit": False,
-        "votes": votes
+        "votes": votes,
+        "karma": karma
     })
 
 
@@ -86,10 +89,25 @@ def newest(request):
 
 
 def threads(request):
-    return render(request, "news.html", {
-        "contributions": Contribution.objects.all(),
-        "submit": False,
-        "selected": "threads"
+    if request.user.is_authenticated:
+        karma = UserDetail.objects.get(user=request.user).karma
+
+    author = User.objects.get(username=request.GET.get('id'))
+    fathers = Comment.objects.filter(author=author)
+    comments = []
+
+    for com in fathers:
+        comments.append(com)
+        orderCommments(com.level+1, com, comments)
+
+    votedcomments = None
+    if request.user.is_authenticated:
+        votedcomments = CommentVote.objects.filter(user=request.user)
+
+    return render(request, "commenttree.html", {
+        "comments": comments,
+        "votedcomments": votedcomments,
+        "karma": karma
     })
 
 
@@ -105,11 +123,17 @@ def ask(request):
     })
 
 
-def profile(request, id):
+def profile(request):
+    if request.user.is_authenticated:
+        karma = UserDetail.objects.get(user=request.user).karma
+    username = request.GET.get('id')
+    user = User.objects.get(username=username)
+    userDetail = UserDetail.objects.get(user=user)
     return render(request, "profile.html", {
-        "profile": User.objects.get(id=id),
-        "profileDetails": UserDetail.objects.get(id=id),
-        "submit": False
+        "profile": user,
+        "profileDetails": userDetail,
+        "submit": False,
+        "karma": karma
     })
 
 
@@ -192,6 +216,18 @@ def orderComments(i, father, comments, id):
         else:
             comments.append(child)
             orderComments(i + 1, child, comments, id)
+
+
+def orderCommments(i, father, comments):
+    children = Comment.objects.filter(level=i).filter(father=father)
+    for child in children:
+        gchildren = Comment.objects.filter(level=i + 1).filter(father=child)
+
+        if len(gchildren) == 0:
+            comments.append(child)
+        else:
+            comments.append(child)
+            orderComments(i + 1, child, comments)
 
 
 def reply(request, id):
@@ -311,3 +347,35 @@ def in_category(things, contribution):
 @register.filter
 def in_category2(things, comment):
     return things.filter(comment=comment)
+
+
+def submission(request):
+    if request.user.is_authenticated:
+        karma = UserDetail.objects.get(user=request.user).karma
+    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by('-date')
+    return render(request, "news.html", {
+        "contributions": contributions,
+        "submit": False,
+        "selected": "",
+        "votes": None,
+        "karma": karma
+    })
+
+
+def favourites(request):
+    votes = None
+    if request.user.is_authenticated:
+        karma = UserDetail.objects.get(user=request.user).karma
+        votes = ContributionVote.objects.filter(user=request.user)
+    contributions = Contribution.objects.filter(pk__in=[ContributionVote.objects.values('contribution').filter(user=User.objects.get(username=request.GET.get('id')))]).order_by('-points')
+    return render(request, "news.html", {
+        "contributions": contributions,
+        "submit": False,
+        "selected": "",
+        "votes": votes,
+        "karma": karma
+    })
+
+
+def comment(request):
+    return None

@@ -1,7 +1,20 @@
-{% extends "item.html" %}
+{% extends "layout.html" %}
 
-{% block comment %}
+{% block item %}
+
+{% for comment in comments %}
+<table border="0" class="comment-tree">
     <tbody>
+        <tr class="athing comtr" id="26690474">
+            <td>
+                <div class="round" style="--margin: {{ comment.level }}px;">
+                    <style>
+                        .round {
+                            margin-left: calc(40 * var(--margin));
+                        }
+                    </style>
+                    <table border= "0">
+                    <tbody>
         <tr>
             <td class="ind">
                 <img src="s.gif" height="1" width="0">
@@ -34,7 +47,7 @@
                 <div style="margin-top:2px; margin-bottom:-10px;">
                     <span class="comhead">
                         <a href="{% url 'user' %}?id={{ comment.author }}" class="hnuser">{{ comment.author }}</a>
-                        <span class="age"><a href=""> {{ comment.date }} </a></span> 
+                        <span class="age"><a href=""> {{ comment.date }} </a></span>
                         {% if user.is_authenticated and votedcomments|in_category2:comment %}
                            | <a href="{% url 'unvotecomment' id=comment.id %}?next={{ request.path }}">unvote</a>
                         {% endif %}
@@ -57,4 +70,12 @@
             </td>
         </tr>
     </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endfor %}
+
 {% endblock %}

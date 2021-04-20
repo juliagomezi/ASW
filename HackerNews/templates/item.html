@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td colspan="2"></td><td class="subtext">
-                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="{% url 'user' id=contribution.author.id %}" class="hnuser">{{ contribution.author }}</a>
+                <span class="score" id="score_26690126">{{ contribution.points }} points</span> by <a href="{% url 'user' %}?id={{ contribution.author }}" class="hnuser">{{ contribution.author }}</a>
                 <span class="age"><a href="">{{ contribution.date }}</a></span> |
                 {% if user.is_authenticated and voted %}
                     <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
