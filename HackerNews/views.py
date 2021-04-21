@@ -5,7 +5,7 @@ from django.template.defaultfilters import register
 
 from django.views.generic import TemplateView
 
-from HackerNews.models import Comment, Contribution, UserDetail, SubmitForm, ContributionVote, CommentVote
+from HackerNews.models import Comment, Contribution, UserDetail, SubmitForm, ContributionVote, CommentVote, DetailForm
 
 from django.contrib.auth.models import User
 
@@ -98,7 +98,7 @@ def threads(request):
 
     for com in fathers:
         comments.append(com)
-        orderCommments(com.level+1, com, comments)
+        orderCommments(com.level + 1, com, comments)
 
     votedcomments = None
     if request.user.is_authenticated:
@@ -124,16 +124,28 @@ def ask(request):
 
 
 def profile(request):
-    if request.user.is_authenticated:
-        karma = UserDetail.objects.get(user=request.user).karma
     username = request.GET.get('id')
     user = User.objects.get(username=username)
     userDetail = UserDetail.objects.get(user=user)
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = DetailForm(request.POST)
+            if form.is_valid():
+                userDetail.set_data(form)
+                userDetail.save()
+
+    karma = get_karma(request)
+    form = DetailForm(
+        initial={'about': userDetail.about, 'show_dead': userDetail.show_dead, 'no_procrast': userDetail.no_procrast,
+                 'max_visit': userDetail.max_visit, 'min_away': userDetail.min_away, 'delay': userDetail.delay})
+
     return render(request, "profile.html", {
         "profile": user,
         "profileDetails": userDetail,
         "submit": False,
-        "karma": karma
+        "karma": karma,
+        "form": form
     })
 
 
@@ -167,40 +179,18 @@ def item(request, id):
     voted = None
     votedcomments = None
     if request.user.is_authenticated:
-        voted = ContributionVote.objects.filter(user=request.user,contribution=Contribution.objects.get(id=id)).exists()
+        voted = ContributionVote.objects.filter(user=request.user,
+                                                contribution=Contribution.objects.get(id=id)).exists()
         votedcomments = CommentVote.objects.filter(user=request.user)
+
+    karma = get_karma(request)
 
     return render(request, "comment.html", {
         "contribution": Contribution.objects.get(id=id),
         "comments": comments,
         "voted": voted,
-        "votedcomments": votedcomments
-    })
-
-
-def updateProfile(request, id):
-    if request.method == 'POST':
-        comment = Comment()
-        comment.contribution = Contribution.objects.get(id=request.POST.get('contribution'))
-        comment.text = request.POST.get('text')
-        level = request.POST.get('level')
-        comment.level = level
-        if level != 0:
-            comment.father = request.POST.get('father')
-
-        comment.save()
-        return redirect('/item/' + str(request.POST.get('contribution')))
-
-    fathers = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=0)
-    comments = []
-
-    for com in fathers:
-        comments.append(com)
-        orderComments(1, com, comments, id)
-
-    return render(request, "comment.html", {
-        "contribution": Contribution.objects.get(id=id),
-        "comments": comments
+        "votedcomments": votedcomments,
+        "karma": karma
     })
 
 
@@ -249,7 +239,7 @@ def reply(request, id):
 
     return render(request, "reply.html", {
         "comment": Comment.objects.get(id=id),
-        "voted": CommentVote.objects.filter(user=request.user,comment=Comment.objects.get(id=id)).exists()
+        "voted": CommentVote.objects.filter(user=request.user, comment=Comment.objects.get(id=id)).exists()
     })
 
 
@@ -344,15 +334,16 @@ def createuser(request):
 def in_category(things, contribution):
     return things.filter(contribution=contribution)
 
+
 @register.filter
 def in_category2(things, comment):
     return things.filter(comment=comment)
 
 
 def submission(request):
-    if request.user.is_authenticated:
-        karma = UserDetail.objects.get(user=request.user).karma
-    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by('-date')
+    karma = get_karma(request)
+    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by(
+        '-date')
     return render(request, "news.html", {
         "contributions": contributions,
         "submit": False,
@@ -364,10 +355,11 @@ def submission(request):
 
 def favourites(request):
     votes = None
+    karma = get_karma(request)
     if request.user.is_authenticated:
-        karma = UserDetail.objects.get(user=request.user).karma
         votes = ContributionVote.objects.filter(user=request.user)
-    contributions = Contribution.objects.filter(pk__in=[ContributionVote.objects.values('contribution').filter(user=User.objects.get(username=request.GET.get('id')))]).order_by('-points')
+    contributions = Contribution.objects.filter(pk__in=[ContributionVote.objects.values('contribution').filter(
+        user=User.objects.get(username=request.GET.get('id')))]).order_by('-points')
     return render(request, "news.html", {
         "contributions": contributions,
         "submit": False,
@@ -378,4 +370,11 @@ def favourites(request):
 
 
 def comment(request):
+    return None
+
+
+def get_karma(request):
+    if request.user.is_authenticated:
+        return UserDetail.objects.get(user=request.user).karma
+
     return None

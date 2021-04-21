@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 # Create your models here.
 from django.forms import ModelForm, Textarea, TextInput, URLInput
 from django.contrib.auth.models import User
+from django import forms
 
 
 class Contribution(models.Model):
@@ -78,9 +79,30 @@ class SubmitForm(ModelForm):
         return cd
 
 
+class DetailForm(forms.Form):
+    about = forms.CharField(required=False, widget=forms.Textarea(attrs={'cols': '60', 'rows': '5'}))
+    show_dead = forms.BooleanField(required=False)
+    no_procrast = forms.BooleanField(required=False)
+    max_visit = forms.IntegerField(min_value=0)
+    min_away = forms.IntegerField(min_value=0)
+    delay = forms.IntegerField(min_value=0)
+
+
 class UserDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     karma = models.IntegerField(default=0)
-    about = models.CharField(max_length=200, blank=True, null=True)
-    email = models.EmailField(max_length=200, blank=True, null=True)
+    about = models.CharField(max_length=200, default="")
     created = models.DateTimeField(default=datetime.now)
+    show_dead = models.BooleanField(default=False)
+    no_procrast = models.BooleanField(default=False)
+    max_visit = models.PositiveIntegerField(default=20)
+    min_away = models.PositiveIntegerField(default=180)
+    delay = models.PositiveIntegerField(default=0)
+
+    def set_data(self, detail_form: DetailForm):
+        self.about = detail_form.cleaned_data['about']
+        self.show_dead = detail_form.cleaned_data['show_dead']
+        self.no_procrast = detail_form.cleaned_data['no_procrast']
+        self.max_visit = detail_form.cleaned_data['max_visit']
+        self.min_away = detail_form.cleaned_data['min_away']
+        self.delay = detail_form.cleaned_data['delay']
