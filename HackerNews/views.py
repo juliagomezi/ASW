@@ -152,7 +152,7 @@ def profile(request):
                 userDetail.save()
 
     karma = get_karma(request)
-    days = datetime.now().date() - user.date_joined.date()
+
     form = DetailForm(
         initial={'about': userDetail.about, 'show_dead': userDetail.show_dead, 'no_procrast': userDetail.no_procrast,
                  'max_visit': userDetail.max_visit, 'min_away': userDetail.min_away, 'delay': userDetail.delay})
@@ -163,7 +163,6 @@ def profile(request):
         "submit": False,
         "karma": karma,
         "form": form,
-        "days": days.days,
         "bottom": False
     })
 
@@ -407,13 +406,13 @@ def favcomments(request):
     if request.user.is_authenticated:
         votes = CommentVote.objects.filter(user=request.user)
     
-    comments = []
+    coments = []
     votedcomments = CommentVote.objects.filter(user=User.objects.get(username=request.GET.get('id')))
     for c in votedcomments:
-        comments.append(c.comment)
+        coments.append(c.comment)
 
     return render(request, "commenttree.html", {
-        "comments": comments,
+        "comments": coments,
         "submit": False,
         "selected": "",
         "votedcomments": votes,
