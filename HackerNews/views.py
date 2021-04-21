@@ -382,8 +382,12 @@ def favourites(request):
     votes = None
     if request.user.is_authenticated:
         votes = ContributionVote.objects.filter(user=request.user)
-    contributions = Contribution.objects.filter(pk__in=[ContributionVote.objects.values('contribution').filter(
-        user=User.objects.get(username=request.GET.get('id')))]).order_by('-points')
+    
+    contributions = []
+    votedcontributions = ContributionVote.objects.filter(user=User.objects.get(username=request.GET.get('id')))
+    for c in votedcontributions:
+        contributions.append(c.contribution)
+    
     return render(request, "news.html", {
         "contributions": contributions,
         "submit": False,
@@ -397,13 +401,17 @@ def favcomments(request):
     votes = None 
     if request.user.is_authenticated:
         votes = CommentVote.objects.filter(user=request.user)
-    comments = Comment.objects.filter(pk__in=[CommentVote.objects.values('comment').filter(
-        user=User.objects.get(username=request.GET.get('id')))]).order_by('-date')
+    
+    comments = []
+    votedcomments = CommentVote.objects.filter(user=User.objects.get(username=request.GET.get('id')))
+    for c in votedcomments:
+        comments.append(c.comment)
+
     return render(request, "commenttree.html", {
         "comments": comments,
         "submit": False,
         "selected": "",
-        "votes": votes,
+        "votedcomments": votes,
         "karma": get_karma(request)
     })
 
