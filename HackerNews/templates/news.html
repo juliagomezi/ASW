@@ -50,7 +50,11 @@
             <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="{% url 'user' %}?id={{ contribution.author.username }}" class="hnuser">{{ contribution.author }}</a> 
             <span class="age"><a href="">{{ contribution.date }}</a></span> |
             {% if user.is_authenticated and votes|in_category:contribution %}
-                <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
+                {% if request.path == "/favourites" %}
+                    <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}?id={{ request.user }}">unvote</a> |
+                {% else %}
+                    <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
+                {% endif %}
             {% endif %}
             <a href="{% url 'item' contribution.id %}">
             {% if contribution.comments.count == 0 %}
