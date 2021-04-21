@@ -91,7 +91,7 @@ class DetailForm(forms.Form):
 class UserDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     karma = models.IntegerField(default=0)
-    about = models.CharField(max_length=200, default="")
+    about = models.CharField(max_length=200, default="", blank=True)
     created = models.DateTimeField(default=datetime.now)
     show_dead = models.BooleanField(default=False)
     no_procrast = models.BooleanField(default=False)

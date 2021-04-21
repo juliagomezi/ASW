@@ -51,6 +51,7 @@
                         {% if user.is_authenticated and votedcomments|in_category2:comment %}
                            | <a href="{% url 'unvotecomment' id=comment.id %}?next={{ request.path }}">unvote</a>
                         {% endif %}
+                        <span>on: <a href="{% url 'item' comment.contribution.id %}">{{ comment.contribution.title }}</a></span>
                         <span class="par"></span>
                         <span class="storyon"></span>
                     </span>

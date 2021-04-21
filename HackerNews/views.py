@@ -88,21 +88,20 @@ def newest(request):
         "submit": False,
         "selected": "newest",
         "votes": votes,
-        "bottom": True
+        "bottom": True,
+        "karma": get_karma(request)
     })
 
 
 def threads(request):
-    if request.user.is_authenticated:
-        karma = UserDetail.objects.get(user=request.user).karma
-
     author = User.objects.get(username=request.GET.get('id'))
     fathers = Comment.objects.filter(author=author)
     comments = []
 
     for com in fathers:
-        comments.append(com)
-        orderCommments(com.level + 1, com, comments)
+        if not_in(com,comments):
+            comments.append(com)
+            orderCommments(com.level + 1, com, comments)
 
     votedcomments = None
     if request.user.is_authenticated:
@@ -112,9 +111,17 @@ def threads(request):
         "comments": comments,
         "votedcomments": votedcomments,
         "selected": "threads",
-        "karma": karma,
+        "karma": get_karma(request),
         "bottom": True
     })
+
+
+def not_in(com, comments):
+    for c in comments:
+        if(c.id==com.id):
+            return False
+    
+    return True
 
 
 def ask(request):
@@ -126,7 +133,8 @@ def ask(request):
         "submit": False,
         "selected": "ask",
         "votes": votes,
-        "bottom": True
+        "bottom": True,
+        "karma": get_karma(request)
     })
 
 
@@ -228,7 +236,7 @@ def orderCommments(i, father, comments):
             comments.append(child)
         else:
             comments.append(child)
-            orderComments(i + 1, child, comments)
+            orderCommments(i + 1, child, comments)
 
 
 def reply(request, id):
@@ -287,7 +295,10 @@ class SubmitView(TemplateView):
                 com.text = request.POST.get('text')
                 com.contribution = Contribution.objects.get(url=c.url)
                 com.save()
-            return redirect('/')
+            ud = UserDetail.objects.get(user=request.user)
+            ud.karma = ud.karma + 1
+            ud.save()
+            return redirect('/newest')
         return errormessage(request)
 
 
@@ -369,7 +380,6 @@ def submission(request):
 
 def favourites(request):
     votes = None
-    karma = get_karma(request)
     if request.user.is_authenticated:
         votes = ContributionVote.objects.filter(user=request.user)
     contributions = Contribution.objects.filter(pk__in=[ContributionVote.objects.values('contribution').filter(
@@ -379,12 +389,23 @@ def favourites(request):
         "submit": False,
         "selected": "",
         "votes": votes,
-        "karma": karma
+        "karma": get_karma(request)
     })
 
 
-def comment(request):
-    return None
+def favcomments(request):
+    votes = None 
+    if request.user.is_authenticated:
+        votes = CommentVote.objects.filter(user=request.user)
+    comments = Comment.objects.filter(pk__in=[CommentVote.objects.values('comment').filter(
+        user=User.objects.get(username=request.GET.get('id')))]).order_by('-date')
+    return render(request, "commenttree.html", {
+        "comments": comments,
+        "submit": False,
+        "selected": "",
+        "votes": votes,
+        "karma": get_karma(request)
+    })
 
 
 def get_karma(request):
