@@ -26,7 +26,11 @@
             <form method="POST" action="/vote/">
                 {% csrf_token %}
                 <td valign="top" class="votelinks">
-                    <input type="hidden" name="next" value="{{ request.path }}">
+                    {% if request.path == "/submission" %}
+                            <input type="hidden" name="next" value="{{ request.path }}?id={{ actualuser }}">
+                    {% else %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                    {% endif %}
                     <button type="submit" class='votearrow' title='upvote' name='id' value={{ contribution.id }}></button>
                 </td>
             </form>
@@ -47,10 +51,14 @@
     <tr>
         <td colspan="2"></td>
         <td class="subtext">
-            <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="" class="hnuser">{{ contribution.author }}</a> 
+            <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="{% url 'user' %}?id={{ contribution.author.username }}" class="hnuser">{{ contribution.author }}</a> 
             <span class="age"><a href="">{{ contribution.date }}</a></span> |
             {% if user.is_authenticated and votes|in_category:contribution %}
-                <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
+                {% if request.path == "/favourites" or request.path == "/submission" %}
+                    <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}?id={{ actualuser }}">unvote</a> |
+                {% else %}
+                    <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
+                {% endif %}
             {% endif %}
             <a href="{% url 'item' contribution.id %}">
             {% if contribution.comments.count == 0 %}
@@ -65,7 +73,6 @@
     {% endfor %}
 	<tr class="morespace" style="height:10px"></tr><tr>
 		<td colspan="2"></td>
-		<td class="title"><a href="" class="morelink" rel="next">More</a>
 		</td>
 	</tr>
     

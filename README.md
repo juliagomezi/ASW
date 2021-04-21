@@ -5,3 +5,5 @@ Marc Fernández
 Júlia Gómez  
 Oriol Prat  
 Sergi Vidiella  
+
+https://hackerbadnews.herokuapp.com/
