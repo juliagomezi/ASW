@@ -35,7 +35,7 @@
             <td class="default">
                 <div style="margin-top:2px; margin-bottom:-10px;">
                     <span class="comhead">
-                        <a href="{% url 'user' id=comment.author.id %}" class="hnuser">{{ comment.author.username }}</a>
+                        <a href="{% url 'user' %}?id={{ comment.author.username }}" class="hnuser">{{ comment.author.username }}</a>
                         <span class="age"><a href=""> {{ comment.date }} </a></span>
                         {% if user.is_authenticated and voted %}
                            | <a href="{% url 'unvotecomment' id=comment.id %}?next={{ request.path }}">unvote</a>

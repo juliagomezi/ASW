@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
@@ -72,7 +74,8 @@ def index(request):
         "contributions": Contribution.objects.all().order_by('-points'),
         "submit": False,
         "votes": votes,
-        "karma": karma
+        "karma": karma,
+        "bottom": True
     })
 
 
@@ -84,7 +87,8 @@ def newest(request):
         "contributions": Contribution.objects.all().order_by('-date'),
         "submit": False,
         "selected": "newest",
-        "votes": votes
+        "votes": votes,
+        "bottom": True
     })
 
 
@@ -107,7 +111,9 @@ def threads(request):
     return render(request, "commenttree.html", {
         "comments": comments,
         "votedcomments": votedcomments,
-        "karma": karma
+        "selected": "threads",
+        "karma": karma,
+        "bottom": True
     })
 
 
@@ -119,7 +125,8 @@ def ask(request):
         "contributions": Contribution.objects.filter(type="ask").order_by('-points'),
         "submit": False,
         "selected": "ask",
-        "votes": votes
+        "votes": votes,
+        "bottom": True
     })
 
 
@@ -136,6 +143,7 @@ def profile(request):
                 userDetail.save()
 
     karma = get_karma(request)
+    days = datetime.now().date() - user.date_joined.date()
     form = DetailForm(
         initial={'about': userDetail.about, 'show_dead': userDetail.show_dead, 'no_procrast': userDetail.no_procrast,
                  'max_visit': userDetail.max_visit, 'min_away': userDetail.min_away, 'delay': userDetail.delay})
@@ -145,7 +153,9 @@ def profile(request):
         "profileDetails": userDetail,
         "submit": False,
         "karma": karma,
-        "form": form
+        "form": form,
+        "days": days.days,
+        "bottom": False
     })
 
 
@@ -190,7 +200,8 @@ def item(request, id):
         "comments": comments,
         "voted": voted,
         "votedcomments": votedcomments,
-        "karma": karma
+        "karma": karma,
+        "bottom": True
     })
 
 
@@ -239,7 +250,10 @@ def reply(request, id):
 
     return render(request, "reply.html", {
         "comment": Comment.objects.get(id=id),
-        "voted": CommentVote.objects.filter(user=request.user, comment=Comment.objects.get(id=id)).exists()
+        "voted": CommentVote.objects.filter(user=request.user, comment=Comment.objects.get(id=id)).exists(),
+        "bottom": False,
+        "submit": False,
+        "reply": True
     })
 
 

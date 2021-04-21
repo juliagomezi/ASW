@@ -11,11 +11,11 @@
                         <table border="0">
                             <tr class='athing'>
                                 <td valign="top">user:</td>
-                                <td timestamp="1616242903"><a href="{% url 'user' %}?id={{ profile.username }}" class="hnuser">{{ profile.username }}</a></td>
+                                <td><a href="{% url 'user' %}?id={{ profile.username }}" class="hnuser">{{ profile.username }}</a></td>
                             </tr>
                             <tr>
                                 <td valign="top">created:</td>
-                                <td><a>{{ profileDetails.created }}</a></td>
+                                <td><a>{{ days }} day{%  if days > 1 %}s{% endif %} ago</a></td>
                             </tr>
                             <tr>
                                 <td valign="top">karma:</td>
@@ -77,11 +77,11 @@
                                 <tr class="athing">
                                     <td valign="top">user:</td>
                                     <td><a href="{% url 'user' %}?id={{ profile.username }}"
-                                           class="hnuser">{{ profile.username }}</a></td>
+                                           class="hnuser"><font color="#3c963c">{{ profile.username }}</font></a></td>
                                 </tr>
                                 <tr>
                                     <td valign="top">created:</td>
-                                    <td>{{ profileDetails.created }}</td>
+                                    <td><a>{{ days }} day{%  if days > 1 %}s{% endif %} ago</a></td>
                                 </tr>
                                 <tr>
                                     <td valign="top">karma:</td>
@@ -91,7 +91,7 @@
                                     <td valign="top">about:</td>
                                     <td style="overflow:hidden;">
                                         {{ form.about|default_if_none:"" }}
-                                            <font size="-2"><a href="" tabindex="-1"><font
+                                            <font size="-2"><a href="https://news.ycombinator.com/formatdoc" tabindex="-1"><font
                                                     color="#afafaf">help</font></a></font>
                                     </td>
                                 </tr>
@@ -145,21 +145,15 @@
                                     <td></td>
                                     <td><a href="{% url 'threads' %}?id={{ profile.username }}"><u>comments</u></a></td>
                                 </tr>
-                                <!-- <tr>
-                                    <td></td>
-                                    <td><a href="hidden"><u>hidden</u></a></td>
-                                </tr> -->
-                                {% if user.username == profile.username %}
                                     <tr>
                                         <td></td>
                                         <td>
                                             <a href="{% url 'favourites' %}?id={{ profile.username }}"><u>favorite
                                                 submissions</u></a> /
                                             <a href="{% url 'comments' %}?id={{ profile.username }}"><u>comments</u></a>
-                                            &nbsp;<span style="font-style:italic">(shared)</span>
+                                            &nbsp;<span style="font-style:italic">(private)</span>
                                         </td>
                                     </tr>
-                                {% endif %}
                                 </tbody>
                             </table>
                             <br>

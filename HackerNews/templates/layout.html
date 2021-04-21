@@ -28,6 +28,14 @@
                                         </b>
                                     </span>
                             </td>
+                        {% elif reply %}
+                            <td style="line-height:12pt; height:10px;">
+                                    <span class="pagetop">
+                                        <b class="hnname">
+                                            <a>Add Comment</a>
+                                        </b>
+                                    </span>
+                            </td>
                         {% else %}
                             <td style="line-height:12pt; height:10px;">
                                     <span class="pagetop">
@@ -38,10 +46,11 @@
                                             <span class="topsel"><a href="{% url 'newest' %}">new</a></span>{% else %}
                                             <a href="{% url 'newest' %}">new</a>{% endif %}
                                         |
-                                        {% if selected == "threads" %}<span class="topsel"><a
-                                                href="{% url 'threads' %}">threads</a></span>{% else %}
-                                            <a href="{% url 'threads' %}">threads</a>{% endif %}
-                                        |
+                                        {% if user.is_authenticated %}
+                                            {%if selected == "threads" %}<span class="topsel"><a
+                                                href="{% url 'threads' %}?id={{ user.username }}">threads</a></span>{% else %}
+                                            <a href="{% url 'threads' %}?id={{ user.username }}">threads</a>{% endif %}
+                                        | {% endif %}
                                         {% if selected == "ask" %}
                                             <span class="topsel"><a href="{% url 'ask' %}">ask</a></span>{% else %}
                                             <a href="{% url 'ask' %}">ask</a>{% endif %}
@@ -58,38 +67,40 @@
                                     <a href="{% url 'logout' %}">logout</a>
                                 {% else %}
                                     <a href="{% url 'login' %}">login</a>
-                                    {%  endif %}
-                                    </td>
-                                {%  endif %}
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <!-- fi capçalera taronja -->
-                <tr id="pagespace" title="" style="height:10px"></tr>
-                <tr>
-                    <td>
-                        <table border="0" cellpadding="0" cellspacing="0" class="itemlist">
-                            <!--inici dels articles-->
-                            {% block item %}
-                            {% endblock %}
-                            <!--fi dels articles-->
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="s.gif" height="10" width="0">
-                        <table width="100%" cellspacing="0" cellpadding="1">
-                            <tr>
-                                <td bgcolor="#ff6600"></td>
-                            </tr>
-                        </table>
-                        <br><center><a href="">Applications are open for YC Summer 2021</a></center>
-                        <br>
-                        <center>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        </span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- fi capçalera taronja -->
+        <tr id="pagespace" title="" style="height:10px"></tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" class="itemlist">
+                    <!--inici dels articles-->
+                    {% block item %}
+                    {% endblock %}
+                    <!--fi dels articles-->
+                </table>
+            </td>
+        </tr>
+        {% if bottom %}
+            <tr>
+                <td>
+                    <img src="s.gif" height="10" width="0">
+                    <table width="100%" cellspacing="0" cellpadding="1">
+                        <tr>
+                            <td bgcolor="#ff6600"></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <center><a href="">Applications are open for YC Summer 2021</a></center>
+                    <br>
+                    <center>
                             <span class="yclinks">
                                 <a href="">Guidelines</a>
                                 | <a href="">FAQ</a>
@@ -100,15 +111,18 @@
                                 | <a href="">Apply to YC</a>
                                 | <a href="">Contact</a>
                             </span>
-                    <br>
-                    <br>
-                    <form method="get" action="//hn.algolia.com/">Search: <input type="text" name="q" value="" size="17"
-                                                                                 autocorrect="off" spellcheck="false"
-                                                                                 autocapitalize="off"
-                                                                                 autocomplete="false"></form>
-                </center>
-            </td>
-        </tr>
+                        <br>
+                        <br>
+                        <form method="get" action="//hn.algolia.com/">Search: <input type="text" name="q" value=""
+                                                                                     size="17"
+                                                                                     autocorrect="off"
+                                                                                     spellcheck="false"
+                                                                                     autocapitalize="off"
+                                                                                     autocomplete="false"></form>
+                    </center>
+                </td>
+            </tr>
+        {% endif %}
     </table>
 </center>
 </body>
