@@ -38,7 +38,11 @@
                 <form method="POST" action="/votecomment/">
                     {% csrf_token %}
                     <td valign="top" class="votelinks">
-                        <input type="hidden" name="next" value="{{ request.path }}">
+                        {% if request.path == "/submission" or request.path == "/threads" %}
+                            <input type="hidden" name="next" value="{{ request.path }}?id={{ actualuser }}">
+                        {% else %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                        {% endif %}
                         <button type="submit" class='votearrow' title='upvote' name='id' value={{ comment.id }}></button>
                     </td>
                 </form>
@@ -49,9 +53,9 @@
                         <a href="{% url 'user' %}?id={{ comment.author }}" class="hnuser">{{ comment.author }}</a>
                         <span class="age"><a href=""> {{ comment.date }} </a></span>
                         {% if user.is_authenticated and votedcomments|in_category2:comment %}
-                           | <a href="{% url 'unvotecomment' id=comment.id %}?next={{ request.path }}?id={{ request.user }}">unvote</a>
+                           | <a href="{% url 'unvotecomment' id=comment.id %}?next={{ request.path }}?id={{ actualuser }}">unvote</a>
                         {% endif %}
-                        <span>on: <a href="{% url 'item' comment.contribution.id %}">{{ comment.contribution.title }}</a></span>
+                        <span>| on: <a href="{% url 'item' comment.contribution.id %}">{{ comment.contribution.title }}</a></span>
                         <span class="par"></span>
                         <span class="storyon"></span>
                     </span>

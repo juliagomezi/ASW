@@ -112,7 +112,8 @@ def threads(request):
         "votedcomments": votedcomments,
         "selected": "threads",
         "karma": get_karma(request),
-        "bottom": True
+        "bottom": True,
+        "actualuser": request.GET.get('id')
     })
 
 
@@ -228,7 +229,7 @@ def orderComments(i, father, comments, id):
 
 
 def orderCommments(i, father, comments):
-    children = Comment.objects.filter(level=i).filter(father=father)
+    children = Comment.objects.filter(level=i).filter(father=father, author=father.author)
     for child in children:
         gchildren = Comment.objects.filter(level=i + 1).filter(father=child)
 
@@ -367,14 +368,17 @@ def in_category2(things, comment):
 
 def submission(request):
     karma = get_karma(request)
-    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by(
-        '-date')
+    votes = None
+    if request.user.is_authenticated:
+        votes = ContributionVote.objects.filter(user=request.user)
+    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by('-date')
     return render(request, "news.html", {
         "contributions": contributions,
         "submit": False,
         "selected": "",
-        "votes": None,
-        "karma": karma
+        "votes": votes,
+        "karma": karma,
+        "actualuser": request.GET.get('id')
     })
 
 
@@ -393,7 +397,8 @@ def favourites(request):
         "submit": False,
         "selected": "",
         "votes": votes,
-        "karma": get_karma(request)
+        "karma": get_karma(request),
+        "actualuser": request.user
     })
 
 
@@ -412,7 +417,8 @@ def favcomments(request):
         "submit": False,
         "selected": "",
         "votedcomments": votes,
-        "karma": get_karma(request)
+        "karma": get_karma(request),
+        "actualuser": request.user
     })
 
 

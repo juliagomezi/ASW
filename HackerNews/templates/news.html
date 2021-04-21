@@ -26,7 +26,11 @@
             <form method="POST" action="/vote/">
                 {% csrf_token %}
                 <td valign="top" class="votelinks">
-                    <input type="hidden" name="next" value="{{ request.path }}">
+                    {% if request.path == "/submission" %}
+                            <input type="hidden" name="next" value="{{ request.path }}?id={{ actualuser }}">
+                    {% else %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                    {% endif %}
                     <button type="submit" class='votearrow' title='upvote' name='id' value={{ contribution.id }}></button>
                 </td>
             </form>
@@ -50,8 +54,8 @@
             <span class="score" id="score_26521582">{{ contribution.points }} points</span> by <a href="{% url 'user' %}?id={{ contribution.author.username }}" class="hnuser">{{ contribution.author }}</a> 
             <span class="age"><a href="">{{ contribution.date }}</a></span> |
             {% if user.is_authenticated and votes|in_category:contribution %}
-                {% if request.path == "/favourites" %}
-                    <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}?id={{ request.user }}">unvote</a> |
+                {% if request.path == "/favourites" or request.path == "/submission" %}
+                    <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}?id={{ actualuser }}">unvote</a> |
                 {% else %}
                     <a href="{% url 'unvote' id=contribution.id %}?next={{ request.path }}">unvote</a> |
                 {% endif %}
