@@ -205,7 +205,7 @@ def item(request, id):
         else:
             return redirect('/login')
 
-    fathers = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=0)
+    fathers = Comment.objects.filter(contribution=Contribution.objects.get(id=id)).filter(level=0).order_by('-votes')
     comments = []
 
     for com in fathers:
