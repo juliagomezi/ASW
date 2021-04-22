@@ -310,6 +310,7 @@ class SubmitView(TemplateView):
             c.save()
             if request.POST.get('url') and request.POST.get('text'):
                 com = Comment()
+                com.author = request.user
                 com.text = request.POST.get('text')
                 com.contribution = Contribution.objects.get(url=c.url)
                 com.save()
