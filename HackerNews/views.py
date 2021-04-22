@@ -95,13 +95,15 @@ def newest(request):
 
 def threads(request):
     author = User.objects.get(username=request.GET.get('id'))
-    fathers = Comment.objects.filter(author=author)
+    fathers = Comment.objects.filter(author=author).order_by('level', '-date')
     comments = []
 
     for com in fathers:
-        if not_in(com,comments):
+        if not_in(com, comments):
             comments.append(com)
             orderCommments(com.level + 1, com, comments)
+
+    fix_order(comments)
 
     votedcomments = None
     if request.user.is_authenticated:
@@ -117,11 +119,27 @@ def threads(request):
     })
 
 
+def fix_order(comments):
+    i = 0
+    if len(comments) > 0:
+        ant = comments[0]
+        for c in comments:
+            if c != ant and c.father != ant:
+                c.level = 0
+                i = 0
+            else:
+                c.level = i
+
+            if ant != c.father:
+                ant = c
+                i = i + 1
+
+
 def not_in(com, comments):
     for c in comments:
-        if(c.id==com.id):
+        if (c.id == com.id):
             return False
-    
+
     return True
 
 
@@ -228,7 +246,7 @@ def orderComments(i, father, comments, id):
 
 
 def orderCommments(i, father, comments):
-    children = Comment.objects.filter(level=i).filter(father=father, author=father.author)
+    children = Comment.objects.filter(level=i).filter(father=father)
     for child in children:
         gchildren = Comment.objects.filter(level=i + 1).filter(father=child)
 
@@ -370,7 +388,8 @@ def submission(request):
     votes = None
     if request.user.is_authenticated:
         votes = ContributionVote.objects.filter(user=request.user)
-    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by('-date')
+    contributions = Contribution.objects.filter(author=User.objects.get(username=request.GET.get('id'))).order_by(
+        '-date')
     return render(request, "news.html", {
         "contributions": contributions,
         "submit": False,
@@ -385,12 +404,12 @@ def favourites(request):
     votes = None
     if request.user.is_authenticated:
         votes = ContributionVote.objects.filter(user=request.user)
-    
+
     contributions = []
     votedcontributions = ContributionVote.objects.filter(user=User.objects.get(username=request.GET.get('id')))
     for c in votedcontributions:
         contributions.append(c.contribution)
-    
+
     return render(request, "news.html", {
         "contributions": contributions,
         "submit": False,
@@ -402,14 +421,16 @@ def favourites(request):
 
 
 def favcomments(request):
-    votes = None 
+    votes = None
     if request.user.is_authenticated:
         votes = CommentVote.objects.filter(user=request.user)
-    
+
     coments = []
     votedcomments = CommentVote.objects.filter(user=User.objects.get(username=request.GET.get('id')))
     for c in votedcomments:
         coments.append(c.comment)
+
+    fix_order(coments)
 
     return render(request, "commenttree.html", {
         "comments": coments,
