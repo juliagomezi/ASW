@@ -248,13 +248,7 @@ def orderComments(i, father, comments, id):
 def orderCommments(i, father, comments):
     children = Comment.objects.filter(level=i).filter(father=father)
     for child in children:
-        gchildren = Comment.objects.filter(level=i + 1).filter(father=child)
-
-        if len(gchildren) == 0:
-            comments.append(child)
-        else:
-            comments.append(child)
-            orderCommments(i + 1, child, comments)
+        comments.append(child)
 
 
 def reply(request, id):
